@@ -46,7 +46,7 @@ from tensorflow.keras.saving import register_keras_serializable
 
 import wandb
 from wandb.integration.keras import WandbMetricsLogger, WandbEvalCallback # WandbModelCheckpoint
-
+wandb.login(host="https://wandb.digi.com.br",key="local-7ceaedf943b75514a612489725629534a4663b1d")
 
 PUNCTUATION_TOKENS = {
     "?": "QUESTION_MARK",
@@ -145,7 +145,7 @@ class IntentClassifier:
         # Set up W&B
         if self.config.wandb_project:
               # Create wandb run instance
-              self.wandb_run = wandb.init(project=self.config.wandb_project, 
+              self.wandb_run = wandb.init(project="smart-home-intent-classifier", 
                                           config=self.config.__dict__)
               # Create and log artifact
               if self.examples_file is not None:
@@ -395,7 +395,7 @@ class IntentClassifier:
             # Get the current run ID if it exists, otherwise start a new run
             run_id = wandb.run.id if wandb.run else wandb.util.generate_id()
             # Initialize wandb with the run ID
-            with wandb.init(project=self.config.wandb_project, id=run_id, resume="allow"):
+            with wandb.init(project="smart-home-intent-classifier", id=run_id, resume="allow"):
                 wandb.log({
                     "inputs": input_text_list, # Log the list of original input texts
                     "true_labels": true_labels,
@@ -474,10 +474,14 @@ if __name__ == "__main__":
         classifier = IntentClassifier()
         results = classifier.cross_validation(n_splits=n_splits)
         print("Cross-validation completed successfully!")
-    fire.Fire({
-        'train': train,
-        'predict': predict,
-        'cross_validation': cross_validation
-    }, serialize=False)
+
+    train(config="tools/smarthome/config.yml",
+          examples_file="tools/smarthome/examples.yml",
+          save_model="tools/smarthome/model.keras")
+    # fire.Fire({
+    #     'train': train,
+    #     'predict': predict,
+    #     'cross_validation': cross_validation
+    # }, serialize=False)
 
 

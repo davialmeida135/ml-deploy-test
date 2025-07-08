@@ -1,0 +1,136 @@
+- intent: controlar_iluminacao
+  examples:
+    - Apague a luz da cozinha.
+    - Desligue todas as luzes.
+    - Ligue a lâmpada da escrivaninha.
+    - Acenda as luzes da sala de estar.
+    - Luzes do quarto, desligar.
+    - Quero acender a luz do banheiro.
+    - Pode apagar a luz do corredor pra mim?
+    - Ligar iluminação da varanda.
+    - Desativa a luz principal.
+    - Ativar a luz de leitura.
+    - Apaga tudo.
+    - Acende a geral.
+    - A luz da garagem, liga aí.
+    - Desliga a luz que fica em cima da mesa de jantar.
+    - Quero o escritório todo apagado.
+    - Deixe a sala com 50% de brilho.
+    - Aumente a intensidade da luz do quarto.
+    - Diminua o brilho do abajur.
+    - Luz da cozinha em 20 por cento.
+    - Coloque a iluminação no máximo.
+    - Quero uma luz mais fraca aqui na sala.
+    - Pode deixar a luz um pouco mais forte?
+    - Brilho da sala de jantar em 75%.
+    - Reduzir a claridade do corredor.
+    - Deixa a luz bem fraquinha.
+    - Mude a cor do abajur para azul.
+    - Quero a luz do quarto em um tom de roxo.
+    - Altere a cor da fita de LED para verde.
+    - Luz da sala em branco quente.
+    - Pode colocar uma cor mais relaxante na iluminação?
+    - Mudar para a cor vermelha.
+    - Quero uma luz branca fria no escritório.
+    - Define a cor da lâmpada da sala como dourado.
+    - Altera a iluminação para um tom alaranjado.
+    - Coloca a luz rosa no quarto da criança.
+
+- intent: ajustar_climatizacao
+  examples:
+    - Ligue o ar condicionado.
+    - Desligue o aquecedor.
+    - Ativar o ventilador do teto.
+    - Pode ligar o ar do quarto pra mim?
+    - Desativa a climatização da sala.
+    - Quero desligar o ar condicionado central.
+    - Ligar ventilação.
+    - Desliga o ar.
+    - Pode ligar o aquecedor do banheiro?
+    - Para o ventilador.
+    - Ajuste o ar condicionado para 22 graus.
+    - Aumente a temperatura em 2 graus.
+    - Diminua a temperatura da sala.
+    - Quero o quarto mais quentinho.
+    - Deixe o ambiente em 24ºC.
+    - Reduza o frio, por favor.
+    - Aumenta o aquecedor.
+    - Coloca o ar no 18.
+    - Temperatura do escritório em 23 graus Celsius.
+    - Deixa um pouco mais frio aqui.
+    - Ativar modo ventilação no ar condicionado.
+    - Coloque o ventilador na velocidade máxima.
+    - Mude o ar para o modo 'auto'.
+    - Diminua a velocidade do ventilador.
+    - Ativar a função 'swing' do ar condicionado.
+    - Pode colocar no modo silencioso?
+    - Quero o modo 'eco' ativado.
+    - Velocidade do ventilador no nível 2.
+    - Mudar para o modo de desumidificar.
+    - Ativa o modo 'sleep' do ar.
+
+- intent: controlar_midia
+  examples:
+    - Toque rock na sala de estar.
+    - Continue a música.
+    - Pause o filme.
+    - Próxima faixa.
+    - Volte para a música anterior.
+    - Tocar minha playlist 'Foco no Trabalho'.
+    - Para de tocar.
+    - Dê o play.
+    - Pode tocar um pouco de jazz?
+    - Reinicie essa música.
+    - Aumente o volume da TV.
+    - Diminua o som.
+    - Volume no 15.
+    - Deixe um pouco mais alto.
+    - Pode baixar o volume da caixa de som?
+    - Coloque o volume em 50 por cento.
+    - Mudo.
+    - Tira do mudo.
+    - O som está muito baixo, aumenta.
+    - Silenciar o som da sala.
+    - Toque essa música na cozinha também.
+    - Mova o som da sala para o quarto.
+    - Pare a música no banheiro.
+    - Continue assistindo a Netflix na TV do quarto.
+    - Tocar em todos os alto-falantes.
+    - Passe o áudio do filme para o home theater.
+    - Quero ouvir isso no fone de ouvido.
+
+- intent: gerenciar_seguranca
+  examples:
+    - Tranque a porta da frente.
+    - A porta dos fundos está trancada?
+    - Destranque a porta da garagem.
+    - Pode trancar todas as portas?
+    - Abrir o portão para a visita.
+    - Verificar se a porta da cozinha está fechada.
+    - Travar a fechadura principal.
+    - Destravar a entrada.
+    - Ativar o alarme.
+    - Desative o sistema de segurança.
+    - Me mostre a câmera da garagem.
+    - Ativar o alarme em modo 'ficar em casa'.
+    - Mostre a visão da câmera da porta da frente.
+    - O alarme está ligado?
+    - Grave o que a câmera do quintal está vendo.
+    - Desarmar o alarme.
+    - Quero ver a câmera do bebê.
+    - Sistema de segurança, ativar.
+
+- intent: consultar_status
+  examples:
+    - A janela do quarto está aberta?
+    - Qual a temperatura atual da sala?
+    - As luzes da cozinha estão acesas?
+    - A porta da frente está trancada?
+    - O alarme está ativado?
+    - Quanto de bateria ainda tem o aspirador robô?
+    - Verificar se eu deixei a TV ligada.
+    - O ar condicionado do escritório está funcionando?
+    - Me diga quais luzes estão acesas na casa.
+    - O filtro de água precisa ser trocado?
+    - Confere pra mim se o portão da garagem fechou direito.
+    - Qual o nível de umidade do quarto?
