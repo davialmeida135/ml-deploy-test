@@ -6,14 +6,14 @@ codes:
 - controlar_iluminacao
 - controlar_midia
 - gerenciar_seguranca
-dataset_name: confusion
+dataset_name: smarthome
 embedding_model: https://tfhub.dev/google/universal-sentence-encoder-multilingual/3
 epochs: 1000
 l1_reg: 0.01
 l2_reg: 0.01
 learning_rate: 0.0001
 min_words: 1
-sent_dropout: 0.2
+sent_dropout: 0.4
 sent_hl_units: 64
 stop_words_file: null
 task: train
