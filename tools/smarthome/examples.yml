@@ -35,6 +35,16 @@
     - Define a cor da lâmpada da sala como dourado.
     - Altera a iluminação para um tom alaranjado.
     - Coloca a luz rosa no quarto da criança.
+    - Acenda as luzes do jardim.
+    - Nossa, que breu aqui dentro.
+    - Não estou enxergando nada.
+    - Está muito escuro para ler.
+    - Acende alguma coisa, por favor.
+    - Por que está tudo apagado?
+    - Queria um clima mais claro.
+    - A claridade está me incomodando.
+    - Deixa só o abajur ligado.
+    - A sala está muito escura.
 
 - intent: ajustar_climatizacao
   examples:
@@ -68,6 +78,15 @@
     - Velocidade do ventilador no nível 2.
     - Mudar para o modo de desumidificar.
     - Ativa o modo 'sleep' do ar.
+    - Que calor!
+    - Estou congelando aqui.
+    - O ar está muito seco, pode ajustar?
+    - Pode deixar o ambiente mais fresco?
+    - Preciso que aqui fique mais quente.
+    - O quarto está um forno.
+    - Liga o vento.
+    - Nossa, que abafado.
+    - Queria um clima mais agradável.
 
 - intent: controlar_midia
   examples:
@@ -98,27 +117,38 @@
     - Tocar em todos os alto-falantes.
     - Passe o áudio do filme para o home theater.
     - Quero ouvir isso no fone de ouvido.
+    - Coloca um som ambiente pra relaxar.
+    - Silêncio, por favor.
+    - Quero ouvir as notícias da manhã.
+    - Toca o último episódio daquele podcast.
+    - Avançar o vídeo em 5 minutos.
+    - Que música é essa que está tocando?
+    - Coloca algo para animar a casa.
 
 - intent: gerenciar_seguranca
   examples:
     - Tranque a porta da frente.
-    - A porta dos fundos está trancada?
     - Destranque a porta da garagem.
     - Pode trancar todas as portas?
     - Abrir o portão para a visita.
-    - Verificar se a porta da cozinha está fechada.
     - Travar a fechadura principal.
     - Destravar a entrada.
     - Ativar o alarme.
     - Desative o sistema de segurança.
-    - Me mostre a câmera da garagem.
     - Ativar o alarme em modo 'ficar em casa'.
-    - Mostre a visão da câmera da porta da frente.
-    - O alarme está ligado?
-    - Grave o que a câmera do quintal está vendo.
     - Desarmar o alarme.
-    - Quero ver a câmera do bebê.
     - Sistema de segurança, ativar.
+    - Acho que ouvi um barulho lá fora.
+    - Tem alguém na porta?
+    - Tranca tudo que eu vou dormir.
+    - Ativa o monitoramento do quintal.
+    - Vamos sair, pode proteger a casa.
+    - Chegamos, pode desativar a segurança.
+    - Abrir o portão principal.
+    - Me mostre a câmera da garagem.
+    - Mostre a visão da câmera da porta da frente.
+    - Grave o que a câmera do quintal está vendo.
+    - Quero ver a câmera do bebê.
 
 - intent: consultar_status
   examples:
@@ -127,10 +157,18 @@
     - As luzes da cozinha estão acesas?
     - A porta da frente está trancada?
     - O alarme está ativado?
-    - Quanto de bateria ainda tem o aspirador robô?
     - Verificar se eu deixei a TV ligada.
     - O ar condicionado do escritório está funcionando?
     - Me diga quais luzes estão acesas na casa.
-    - O filtro de água precisa ser trocado?
     - Confere pra mim se o portão da garagem fechou direito.
     - Qual o nível de umidade do quarto?
+    - Como está a qualidade do ar?
+    - Qual o consumo de energia de hoje?
+    - Me dá um resumo geral da casa.
+    - Está tudo desligado no segundo andar?
+    - A porta dos fundos está trancada?
+    - O sistema de segurança está ligado?
+    - Verificar se a porta da cozinha está fechada.
+    - O que está tocando na sala?
+    - Qual o volume da TV?
+    - A fechadura principal está travada?
