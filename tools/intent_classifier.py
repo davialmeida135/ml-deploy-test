@@ -46,7 +46,10 @@ from tensorflow.keras.saving import register_keras_serializable
 
 import wandb
 from wandb.integration.keras import WandbMetricsLogger, WandbEvalCallback # WandbModelCheckpoint
-wandb.login(host="https://wandb.digi.com.br",key="local-7ceaedf943b75514a612489725629534a4663b1d")
+#wandb.login(host="https://wandb.digi.com.br",key="local-7ceaedf943b75514a612489725629534a4663b1d")
+key = os.environ.get("WANDB_API_KEY")
+print("CHAVE:", key)
+wandb.login(host = "https://api.wandb.ai",key="9cbd211ef6297b8a0644114acad7810f6f7ef1e4")
 
 PUNCTUATION_TOKENS = {
     "?": "QUESTION_MARK",
@@ -110,7 +113,7 @@ def fetch_model_from_wandb(url: str) -> str:
     if not api_key or len(api_key) != 40:
         raise ValueError("WANDB_API_KEY is required and must be 40 characters long")
 
-    wandb.login(key=api_key)
+    #wandb.login(key=api_key)
     api = wandb.Api()
     if ":" not in url:
         url = f"{url}:latest"
@@ -120,6 +123,8 @@ def fetch_model_from_wandb(url: str) -> str:
     for fname in os.listdir(path):
         if fname.endswith(".keras") or fname.endswith(".h5"):
             return os.path.join(path, fname)
+        
+    print(f"Model fetched from {url} and saved to {path}")
     return path
 
 
@@ -129,11 +134,15 @@ class IntentClassifier:
         self.handle_punctuation = handle_punctuation
         if load_model is None:
             env_url = os.environ.get("WANDB_MODEL_URL")
+            print(f"env_url: {env_url}")
+            
             if env_url:
                 try:
                     load_model = fetch_model_from_wandb(env_url)
+                    self.model = tf.keras.models.load_model(load_model)
                 except Exception as exc:
                     print(f"Failed to fetch model from {env_url}: {exc}")
+
         # Load config
         self._load_config(config, load_model, examples_file)
         # Load intents from the examples file if provided
@@ -145,7 +154,7 @@ class IntentClassifier:
         # Set up W&B
         if self.config.wandb_project:
               # Create wandb run instance
-              self.wandb_run = wandb.init(project="smart-home-intent-classifier", 
+              self.wandb_run = wandb.init(entity = "davidiogenes51-ufrn", project="smart-home-intent-classifier", 
                                           config=self.config.__dict__)
               # Create and log artifact
               if self.examples_file is not None:
@@ -161,6 +170,8 @@ class IntentClassifier:
         if isinstance(config, str):
             with open(config, 'r') as f:
                 self.config = Config(**yaml.safe_load(f))
+            if load_model is not None:
+                self.model = tf.keras.models.load_model(load_model)
             print(f"Loaded config from {config}.")
         elif isinstance(config, Config):
             self.config = config
@@ -177,7 +188,17 @@ class IntentClassifier:
                 with open(config_path, 'r') as f:
                     self.config = Config(**yaml.safe_load(f))
             else:
-                raise ValueError("config must be a path to a YAML file, a Config object, or None.")
+                self.config = Config(
+                    wandb_project= "intent_classifier",
+                    dataset_name= "smarthome",
+                    sent_hl_units= 64,
+                    sent_dropout= 0.4,
+                    learning_rate= 0.0001,
+                    epochs= 1000,
+                    callback_patience= 100,
+                    validation_split= 0.1,
+
+                )
         else:
             raise ValueError("config must be a path to a YAML file, a Config object, or None.")
     def _load_intents(self, examples_file):
@@ -343,28 +364,58 @@ class IntentClassifier:
         if save_model is not None:
             self.save_model(path=save_model)
         return self.model
-
     def save_model(self, path):
+        """
+        Saves the model and its configuration, then logs them as a wandb artifact.
+        """
+        # Ensure the parent directory exists
         Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
-        # Save model in SavedModel format
-        if path.endswith('/'):
-            # Remove trailing slash if present
-            path = path.rstrip('/')
-        # Save the model
+
+        # Keras's save method handles both file (.keras) and directory (SavedModel) formats.
+        # No need to manually strip slashes.
         self.model.save(path)
-        # Save config into a yaml file inside the model directory
-        config_path = path.replace(".keras", "_config.yml") #os.path.join(os.path.dirname(path), f"{self.config.dataset_name}_config.yml")
-        with open(config_path, 'w') as f:
-            f.write(yaml.dump(self.config.__dict__))
         print(f"Model saved to {path}.")
-        if self.config.wandb_project:
-            # Crie e envie o artifact
+
+        # Define and save the configuration file next to the model
+        # This assumes `path` is something like '.../model.keras' or '.../model_dir'
+        if path.endswith('.keras'):
+            config_path = path.replace(".keras", "_config.yml")
+        else:
+            # If it's a directory, save config inside it
+            config_path = os.path.join(path, "config.yml")
+
+        with open(config_path, 'w') as f:
+            yaml.dump(self.config.__dict__, f)
+        print(f"Configuration saved to {config_path}.")
+
+        # If wandb is configured, log the artifact
+        if self.config.wandb_project and self.wandb_run:
+            print("Logging artifact to wandb...")
+            
+            # 1. Create the artifact object
             artifact = wandb.Artifact(
                 name=f"{self.config.dataset_name}-clf-v1",
                 type="model",
-                description="Modelo Keras v1 para classificação de intenção"
-            ).add_file(path)
+                description="Keras model for intent classification"
+            )
+
+            # 2. Add files or directories to the artifact object
+            # Check if the saved path is a directory (SavedModel format) or a single file (.keras)
+            if os.path.isdir(path):
+                artifact.add_dir(path, name='model')
+            else:
+                artifact.add_file(path, name='model.keras')
+            
+            # Also add the configuration file to the artifact
+            artifact.add_file(config_path, name='config.yml')
+
+            # 3. Log the artifact object, which now contains the files
             self.wandb_run.log_artifact(artifact)
+            
+            print("Artifact logged successfully.")
+            
+            # It's generally better to call finish() at the end of your entire script,
+            # but if this is the last step, it's okay here.
             self.wandb_run.finish()
 
     def predict(self, input_text, true_labels: list = None, log_to_wandb: bool = False):
@@ -478,6 +529,8 @@ if __name__ == "__main__":
     train(config="tools/smarthome/config.yml",
           examples_file="tools/smarthome/examples.yml",
           save_model="tools/smarthome/model.keras")
+
+    #classifier = IntentClassifier(config="tools/smarthome/config.yml", examples_file="tools/smarthome/examples.yml",)
     # fire.Fire({
     #     'train': train,
     #     'predict': predict,

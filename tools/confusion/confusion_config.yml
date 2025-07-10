@@ -1,7 +1,7 @@
-wandb_project: "intent_classifier"
-dataset_name: "confusion"
+wandb_project: "smart-home-intent-classifier"
+dataset_name: "smarthome"
 sent_hl_units: 64
-sent_dropout: 0.5
+sent_dropout: 0.2
 learning_rate: 0.0001
 epochs: 1000
 callback_patience: 100

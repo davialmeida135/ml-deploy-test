@@ -1,4 +1,4 @@
-wandb_project: "intent_classifier"
+wandb_project: "smart-home-intent-classifier"
 dataset_name: "smarthome"
 sent_hl_units: 64
 sent_dropout: 0.4

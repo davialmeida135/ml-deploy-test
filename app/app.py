@@ -101,12 +101,22 @@ app.add_middleware(
 
 # Initialize models with error handling
 MODELS = {}
+# try:
+#     logger.info("Loading confusion model...")
+#     MODELS["confusion"] = IntentClassifier(load_model="tools/confusion/confusion-clf-v1.keras")
+#     logger.info("Confusion model loaded successfully")
+# except Exception as e:
+#     logger.error(f"Failed to load confusion model: {str(e)}")
+#     logger.error(traceback.format_exc())
+
 try:
-    logger.info("Loading confusion model...")
-    MODELS["confusion"] = IntentClassifier(load_model="tools/confusion/confusion-clf-v1.keras")
-    logger.info("Confusion model loaded successfully")
+    logger.info("Loading smarthome model...")
+    MODELS["smarthome"] = IntentClassifier(config="tools/smarthome/config.yml", examples_file="tools/smarthome/examples.yml",
+                                           #load_model="tools/smarthome/model.keras"
+                                           )
+    logger.info("Smarthome model loaded successfully")
 except Exception as e:
-    logger.error(f"Failed to load confusion model: {str(e)}")
+    logger.error(f"Failed to load smarthome model: {str(e)}")
     logger.error(traceback.format_exc())
 
 # Initialize database connection
@@ -128,6 +138,9 @@ async def read_root():
     return {
         "message": f"Intent Classifier API is running in {ENV} mode. Check /redoc for more info."
     }
+
+
+
 
 # POST http://localhost:8000/intents/confusion
 @app.post("/confusion", response_model=PredictionResult)
@@ -181,6 +194,65 @@ async def predict_confusion(request: TextRequest, owner=Depends(conditional_auth
         raise
     except Exception as e:
         logger.error(f"Error in predict_confusion: {str(e)}")
+        logger.error(f"Exception type: {type(e)}")
+        logger.error(f"Full traceback:")
+        logger.error(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+
+
+# POST http://localhost:8000/intents/home
+@app.post("/home", response_model=PredictionResult)
+async def predict_home(request: TextRequest,):
+    owner='hahaha'
+    logger.info(f"Smarthome intention prediction request from user: ")
+    logger.info(f"Input text: '{request.text}'")
+    
+    try:
+        # Check if model is loaded
+        if "smarthome" not in MODELS:
+            logger.error("Smart Home model not loaded")
+            raise HTTPException(status_code=500, detail="Model not available")
+        
+        # Make prediction
+        logger.info("Making prediction...")
+        # The predict method now returns: (top_intent_name, dict_of_all_probs)
+        top_intent, all_probs = MODELS["smarthome"].predict(request.text)
+        
+        logger.info(f"Top intent: {top_intent}")
+        logger.info(f"All probabilities: {all_probs}")
+
+        certainty = all_probs.get(top_intent) # Get certainty of the top_intent
+        
+        logger.info(f"Processed prediction: {top_intent}, certainty: {certainty}")
+        # Create log entry
+        log = {
+            "text": request.text,
+            "prediction": top_intent,
+            "certainty": float(certainty) if certainty is not None else None,
+            "all_probabilities": all_probs, # Log all probabilities
+            "owner": owner
+        }
+        # Save to database
+        try:
+            collection.insert_one(log)
+            logger.info("Prediction logged to database")
+        except Exception as e:
+            logger.error(f"Failed to log to database: {str(e)}")
+            # Don't fail the request if logging fails
+
+        result = PredictionResult(
+            text=request.text, 
+            prediction=top_intent, 
+            certainty=float(certainty) if certainty is not None else None,
+            all_probabilities=all_probs
+        )
+        logger.info(f"Returning result: {result}")
+        return result
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except Exception as e:
+        logger.error(f"Error in predict_home: {str(e)}")
         logger.error(f"Exception type: {type(e)}")
         logger.error(f"Full traceback:")
         logger.error(traceback.format_exc())
