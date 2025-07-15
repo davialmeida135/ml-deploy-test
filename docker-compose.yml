@@ -6,8 +6,6 @@ services:
       dockerfile: app/Dockerfile.app
     ports:
       - "8000:8000"
-    depends_on:
-      - mongo
     environment:
       - ENV=dev
       - MONGO_URI=${MONGO_URI}
@@ -25,13 +23,3 @@ services:
       - backend
     environment:
       - API_BASE_URL=http://backend:8000/intents
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:

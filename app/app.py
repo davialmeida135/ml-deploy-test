@@ -174,12 +174,12 @@ async def predict_confusion(request: TextRequest, owner=Depends(conditional_auth
             "owner": owner
         }
         # Save to database
-        try:
-            collection.insert_one(log)
-            logger.info("Prediction logged to database")
-        except Exception as e:
-            logger.error(f"Failed to log to database: {str(e)}")
-            # Don't fail the request if logging fails
+        # try:
+        #     collection.insert_one(log)
+        #     logger.info("Prediction logged to database")
+        # except Exception as e:
+        #     logger.error(f"Failed to log to database: {str(e)}")
+        #     # Don't fail the request if logging fails
 
         result = PredictionResult(
             text=request.text, 
@@ -233,12 +233,12 @@ async def predict_home(request: TextRequest,):
             "owner": owner
         }
         # Save to database
-        try:
-            collection.insert_one(log)
-            logger.info("Prediction logged to database")
-        except Exception as e:
-            logger.error(f"Failed to log to database: {str(e)}")
-            # Don't fail the request if logging fails
+        # try:
+        #     collection.insert_one(log)
+        #     logger.info("Prediction logged to database")
+        # except Exception as e:
+        #     logger.error(f"Failed to log to database: {str(e)}")
+        #     # Don't fail the request if logging fails
 
         result = PredictionResult(
             text=request.text, 
