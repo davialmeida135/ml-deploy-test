@@ -16,7 +16,7 @@ and a bar chart of probabilities for all possible intents.
 # FastAPI endpoint URL
 # Get the API_BASE_URL from environment variable, with a fallback for local development
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000/intents")
-API_URL = f"{API_BASE_URL}/confusion"
+API_URL = f"{API_BASE_URL}/home"
 
 st.sidebar.info(f"Connecting to API at: {API_URL}") # Display for debugging/info
 

@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  app:
+  backend:
     build:
       context: .
       dockerfile: app/Dockerfile.app
@@ -22,7 +22,7 @@ services:
     ports:
       - "8501:8501"
     depends_on:
-      - app
+      - backend
     environment:
       - API_BASE_URL=http://backend:8000/intents
 
