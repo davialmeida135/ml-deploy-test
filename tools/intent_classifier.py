@@ -176,29 +176,39 @@ class IntentClassifier:
         elif isinstance(config, Config):
             self.config = config
         elif config is None:
-            # Load from a model
+        # Load from a model
             if load_model is not None:
                 self.model = tf.keras.models.load_model(load_model)
                 print(f"Loaded keras model from {load_model}.")
-                config_path = load_model.replace(".keras", "_config.yml")
+                # Fix: Check for config.yml in the same directory as the model
+                model_dir = os.path.dirname(load_model)
+                config_path = os.path.join(model_dir, "config.yml")
+                
                 if not os.path.exists(config_path):
-                    alt_path = os.path.join("tools", "models", os.path.basename(config_path))
-                    if os.path.exists(alt_path):
-                        config_path = alt_path
+                    # Alternative path constructions
+                    alt_paths = [
+                        load_model.replace(".keras", "_config.yml"),
+                        load_model.replace("model.keras", "config.yml"),
+                        os.path.join("tools", "models", "config.yml"),
+                        os.path.join("tools", "smarthome", "config.yml")  # fallback to smarthome config
+                    ]
+                    
+                    for alt_path in alt_paths:
+                        if os.path.exists(alt_path):
+                            config_path = alt_path
+                            break
+                    else:
+                        # If no config found, create a default one
+                        print("Warning: No config file found, using default configuration")
+                        self.config = Config(
+                            dataset_name="smarthome",
+                            codes=["ajustar_climatizacao", "consultar_status", "controlar_iluminacao", "controlar_midia", "gerenciar_seguranca"],
+                            wandb_project="smart-home-intent-classifier"
+                        )
+                        return
+                
                 with open(config_path, 'r') as f:
                     self.config = Config(**yaml.safe_load(f))
-            else:
-                self.config = Config(
-                    wandb_project= "intent_classifier",
-                    dataset_name= "smarthome",
-                    sent_hl_units= 64,
-                    sent_dropout= 0.4,
-                    learning_rate= 0.0001,
-                    epochs= 1000,
-                    callback_patience= 100,
-                    validation_split= 0.1,
-
-                )
         else:
             raise ValueError("config must be a path to a YAML file, a Config object, or None.")
     def _load_intents(self, examples_file):
@@ -370,6 +380,8 @@ class IntentClassifier:
         """
         # Ensure the parent directory exists
         Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
+        model_dir = os.path.dirname(path)
+        config_path = os.path.join(model_dir, "config.yml")
 
         # Keras's save method handles both file (.keras) and directory (SavedModel) formats.
         # No need to manually strip slashes.
