@@ -107,7 +107,7 @@ class IntentClassifierTest(unittest.TestCase):
         else:
             print("⚙️ Using dummy model for accuracy demonstration")
 
-        examples_path = os.path.join(os.path.dirname(__file__), "..", "tools", "confusion", "confusion_examples.yml")
+        examples_path = os.path.join(os.path.dirname(__file__), "..", "tools", "smarthome", "examples.yml")
         with open(examples_path, "r") as f:
             data = yaml.safe_load(f)
 
